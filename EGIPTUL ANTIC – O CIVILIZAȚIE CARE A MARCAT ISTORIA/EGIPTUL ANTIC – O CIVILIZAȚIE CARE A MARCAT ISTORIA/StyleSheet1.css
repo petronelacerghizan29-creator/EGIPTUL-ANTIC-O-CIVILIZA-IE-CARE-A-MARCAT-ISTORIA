@@ -1,0 +1,343 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/* smooth scrolling */
+html { scroll-behavior: smooth; } 
+
+body {
+    background: #272727;
+    min-height: 100vh;
+    font-family: "Times New Roman", Times, serif;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.aqua-left, .aqua-right {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: max(40px, calc((100vw - 1024px) / 2));
+    background-color: aqua;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    z-index: 1000;
+}
+.aqua-left { left: 0; background-image: url("png/aqua.png"); }
+.aqua-right { right: 0; background-image: url("png/aqua.png"); }
+
+.dark-center {
+    position: relative;
+    overflow: hidden;
+    width: 1024px;
+    height: 118px;
+    margin: 0 auto;
+}
+.slideshow { position: absolute; inset: 0; width: 100%; height: 100%; }
+.slide { position: absolute; inset: 0; width:100%; height:100%; object-fit: cover; opacity: 0; transition: opacity 1s ease; }
+.slide.active { opacity: 1; }
+
+.red-bar {
+    position: relative;
+    z-index: 900;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    width: 1024px;
+    height: 50px;
+    margin: 0 auto;
+    padding: 0 8px;
+    box-sizing: border-box;
+    background-color: #be9665;
+}
+
+.pink-rect {
+    flex: 0 0 auto;
+    width: 140px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border-radius: 4px;
+    color: #272727;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 2px 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    transition: background .18s ease, transform .12s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.pink-rect.active {
+    background: #ffffff;
+    transform: none;
+    box-shadow: none;
+}
+
+.orange-rect {
+    width: 1024px;
+    margin: 0 auto;
+    background-color: #ff8a00;
+    background-image: url("png/orange.png");
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: cover;
+    min-height: calc(100vh - 118px - 50px);
+    box-shadow: 0 6px 18px rgba(0,0,0,.12);
+    position: relative;
+    padding: 28px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    color: #0b1a2b;
+}
+
+.orange-content {
+    max-width: 920px;
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.section { padding: 18px 0; scroll-margin-top: 168px; }
+.orange-content h2 { margin: 0 0 12px; font-size: 22px; font-weight: 700; color: #0b1a2b; }
+.orange-content p, .orange-content li { color: #0b1a2b; }
+
+/* media layout: video box + text */
+.media {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.media .img-box,
+.media .media-video {
+    flex: 0 0 180px;
+    width: 180px;
+    height: 180px;
+    background: linear-gradient(180deg, #e6e6e6, #d6d6d6);
+    border: 2px dashed rgba(11,26,43,0.08);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(11,26,43,0.45);
+    font-size: 13px;
+    text-align: center;
+    overflow: hidden;
+}
+.media .media-video {
+    border-style: solid;
+    border-width: 0;
+    object-fit: cover;
+    display: block;
+    background: #000;
+}
+.media .media-text {
+    flex: 1 1 auto;
+}
+/* reverse layout to place media at right */
+.media.reverse { flex-direction: row-reverse; }
+
+/* highlight text  */
+.orange-content .section.highlight {
+    background: rgba(255, 255, 0, 0.10); 
+    border-left: 6px solid rgba(255, 138, 0, 0.95); 
+    box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+    transition: background .28s ease, border-color .28s ease, box-shadow .28s ease;
+    padding-left: 12px;
+}
+
+#help-btn {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    width: 48px;
+    height: 48px;
+    background: #ffffff;
+    color: #111;
+    font-weight: 700;
+    font-size: 20px;
+    border-radius: 6px;
+    border: 2px solid #111;
+    z-index: 1500;
+    display: inline-grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+}
+
+#help-panel {
+    position: fixed;
+    left: 16px;
+    bottom: 80px;
+    width: 320px;
+    max-width: calc(100vw - 40px);
+    background: #ffffff;
+    color: #0b1a2b;
+    border-radius: 8px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    padding: 14px;
+    z-index: 1500;
+    transform-origin: left bottom;
+    transform: translateY(8px) scale(.98);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform .22s ease, opacity .22s ease;
+    border: 2px solid rgba(0,0,0,0.06);
+}
+
+#help-panel::before {
+    content: "";
+    position: absolute;
+    left: 18px;
+    bottom: -8px;
+    width: 16px;
+    height: 16px;
+    background: #ffffff;
+    transform: rotate(45deg);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    border-radius: 2px;
+}
+
+#help-panel.open {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.demo-mark {
+    display: inline-block;
+    font-size: 34px;
+    font-weight: 700;
+    padding: 6px 10px;
+    background: rgba(255, 235, 90, 0.95);
+    color: #2b2b2b;
+    border-radius: 2px;
+    border-left: 6px solid #ff8a00;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.09);
+}
+
+#help-panel-inner h4 { margin: 0 0 8px; font-size: 16px; }
+.help-demo-row { margin-top: 8px; }
+
+.demo-target-highlight {
+    background: rgba(255, 255, 0, 0.12);
+    border-left: 6px solid rgba(255, 138, 0, 0.95);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+    transition: background .28s ease, border-color .28s ease, box-shadow .28s ease;
+    padding-left: 12px;
+}
+
+/* page-end purple rectangle placed after content (not fixed) */
+.page-end-bar {
+    position: relative;
+    left: 0;
+    width: 100vw;
+    max-width: 100%;
+    height: 300px;
+    background: transparent;
+    overflow: hidden;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* footer decorative image sits behind the content */
+.page-end-bar img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    z-index: 1;
+}
+
+/* readable inner panel above the transparent image
+   background changed to warm brown/tan, left accent uses red-bar color (#be9665) */
+.bibliography {
+    position: relative;
+    z-index: 2;
+    width: 1024px;
+    max-width: calc(100% - 48px);
+    background: #efe3cf; /* warm tan */
+    border-radius: 8px;
+    padding: 18px 22px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    color: #2b1f16; /* dark brown text */
+    box-sizing: border-box;
+    border-left: 6px solid #be9665; /* matches red-bar color */
+}
+
+.bibliography h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    letter-spacing: 0.4px;
+    color: #2b1f16;
+}
+
+.bibliography ul {
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* layout each bibliography row: link left, meta right */
+.bibliography li {
+    margin-bottom: 10px;
+}
+.bib-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.bib-row a {
+    flex: 0 1 auto;
+    color: #3b2a20;
+    font-weight: 700;
+    text-decoration: none;
+}
+.bib-row a:hover {
+    text-decoration: underline;
+}
+
+/* stacked meta and credit block, right aligned inside the bib-row */
+.bib-meta-block {
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.bib-meta {
+    font-size: 13px;
+    color: #5a4737;
+    white-space: nowrap;
+}
+
+/* new: credit line for generated images */
+.image-credit {
+    font-size: 13px;
+    color: #5a4737;
+    font-style: italic;
+}
+
+/* responsive tweak */
+@media (max-width: 1200px) {
+    .dark-center, .red-bar, .orange-rect { transform-origin: top; transform: scale(0.9); width: 90%; padding-left: 40px; padding-right: 40px; }
+    .media { flex-direction: column; gap: 12px; }
+    .media .img-box, .media .media-video { width: 100%; height: 220px; flex: none; }
+    .bib-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .bib-meta-block { margin-left: 0; align-items: flex-start; }
+    html { scroll-behavior: smooth; }
+}
